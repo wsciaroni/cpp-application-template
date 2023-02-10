@@ -42,3 +42,5 @@ endif(BUILD_TESTS)
 # Include sub-projects.
 add_subdirectory ("${CMAKE_CURRENT_LIST_DIR}/libraries")
 add_subdirectory ("${CMAKE_CURRENT_LIST_DIR}/applications")
+
+add_subdirectory ("${CMAKE_CURRENT_LIST_DIR}/tests")
