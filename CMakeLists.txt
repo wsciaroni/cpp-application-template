@@ -13,9 +13,9 @@ if(MSVC)
     set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 endif(MSVC)
 
-option(BUILD_TESTS OFF)
+include(CTest)
 
-if(BUILD_TESTS)
+if(BUILD_TESTING)
     include(FetchContent)
     FetchContent_Declare(
     googletest
@@ -34,10 +34,7 @@ if(BUILD_TESTS)
     set_target_properties(gtest_main PROPERTIES FOLDER "external/Google")
     set_target_properties(gmock_main PROPERTIES FOLDER "external/Google")
     endif(MSVC)
-
-    enable_testing()
-    include(CTest)
-endif(BUILD_TESTS)
+endif(BUILD_TESTING)
 
 # Include sub-projects.
 add_subdirectory ("${CMAKE_CURRENT_LIST_DIR}/libraries")

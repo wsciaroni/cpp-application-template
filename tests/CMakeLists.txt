@@ -1,5 +1,5 @@
 
-if(BUILD_TESTS)
+if(BUILD_TESTING)
     # Tests
     file(GLOB_RECURSE unittests "${CMAKE_CURRENT_LIST_DIR}/unittests/*.cxx")
     add_executable(
@@ -16,4 +16,4 @@ if(BUILD_TESTS)
 
     include(GoogleTest)
     gtest_discover_tests(testLib)
-endif(BUILD_TESTS)
+endif(BUILD_TESTING)
