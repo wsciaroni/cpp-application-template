@@ -19,15 +19,20 @@ macro(enable_gtest)
             set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
         endif(MSVC)
 
-        # 
-        FetchContent_MakeAvailable(googletest)
+        # Check to see if googletest has already been populated so we only populate it once
+        FetchContent_GetProperties(googletest)
+        if(NOT googletest_POPULATED)
 
-        # For Windows: Organize GoogleTest in the project explorer
-        if(MSVC)
-            set_target_properties(gtest PROPERTIES FOLDER "external/Google")
-            set_target_properties(gmock PROPERTIES FOLDER "external/Google")
-            set_target_properties(gtest_main PROPERTIES FOLDER "external/Google")
-            set_target_properties(gmock_main PROPERTIES FOLDER "external/Google")
-        endif(MSVC)
+            # Populate the FetchContent
+            FetchContent_MakeAvailable(googletest)
+
+            # For Windows: Organize GoogleTest in the project explorer
+            if(MSVC)
+                set_target_properties(gtest PROPERTIES FOLDER "external/Google")
+                set_target_properties(gmock PROPERTIES FOLDER "external/Google")
+                set_target_properties(gtest_main PROPERTIES FOLDER "external/Google")
+                set_target_properties(gmock_main PROPERTIES FOLDER "external/Google")
+            endif(MSVC)
+        endif()
     endif(BUILD_TESTING)
 endmacro(enable_gtest)
