@@ -32,7 +32,28 @@
 
 # Helper function for common configuration
 function(common_library_configure_target TARGET_NAME NO_WARN_AS_ERROR)
-    # Warnings
+    # Strict Flags
+    if(MSVC)
+        target_compile_options(${TARGET_NAME} PRIVATE
+            /W4
+            /permissive-
+        )
+    else()
+        target_compile_options(${TARGET_NAME} PRIVATE
+            -Wall
+            -Wextra
+            -Wpedantic
+            -Wshadow
+            -Wconversion
+            -Wsign-conversion
+            -Wcast-align
+            -Wformat=2
+            -Wunused
+            -Wnon-virtual-dtor
+        )
+    endif()
+
+    # Warnings as Errors
     if(NOT NO_WARN_AS_ERROR)
         if(MSVC)
             target_compile_options(${TARGET_NAME} PRIVATE /WX)
