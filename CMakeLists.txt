@@ -16,6 +16,34 @@ endif(MSVC)
 include(cmake/EnableGTest.cmake)
 enable_gtest()
 
+# Strict Compiler Flags (Global)
+if(MSVC)
+    add_compile_options(/W4 /permissive-)
+else()
+    add_compile_options(
+        -Wall
+        -Wextra
+        -Wpedantic
+        -Wshadow
+        -Wconversion
+        -Wsign-conversion
+        -Wcast-align
+        -Wformat=2
+        -Wunused
+        -Wnon-virtual-dtor
+    )
+endif()
+
+# Warnings as Errors (Global)
+option(NO_WARN_AS_ERROR "Disable warnings as errors" OFF)
+if(NOT NO_WARN_AS_ERROR)
+    if(MSVC)
+        add_compile_options(/WX)
+    else()
+        add_compile_options(-Werror)
+    endif()
+endif()
+
 include(cmake/AddCommonLibraryDirectory.cmake)
 option(COMMON_LIB_GLOBAL_USE_CTEST_ONLY "Force all common libraries to use CTest only (skip gtest discovery)" OFF)
 
