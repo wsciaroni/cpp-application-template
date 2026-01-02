@@ -14,8 +14,6 @@ if(BUILD_TESTING)
         GTest::gmock_main
     )
 
-    common_library_configure_target(testLib "${NO_WARN_AS_ERROR}")
-
     include(GoogleTest)
     gtest_discover_tests(testLib)
 endif(BUILD_TESTING)

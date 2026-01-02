@@ -30,39 +30,17 @@
 #   )
 #
 
-# Helper function for common configuration
-function(common_library_configure_target TARGET_NAME NO_WARN_AS_ERROR)
-    # Strict Flags
-    if(MSVC)
-        target_compile_options(${TARGET_NAME} PRIVATE
-            /W4
-            /permissive-
-        )
-    else()
-        target_compile_options(${TARGET_NAME} PRIVATE
-            -Wall
-            -Wextra
-            -Wpedantic
-            -Wshadow
-            -Wconversion
-            -Wsign-conversion
-            -Wcast-align
-            -Wformat=2
-            -Wunused
-            -Wnon-virtual-dtor
-        )
-    endif()
-
-    # Warnings as Errors
-    if(NOT NO_WARN_AS_ERROR)
+# Helper function to relax warning strictness if requested
+function(apply_common_lib_warning_overrides TARGET_NAME NO_WARN_AS_ERROR)
+    # If the user requested NO_WARN_AS_ERROR, we must explicitly disable the
+    # global "warnings as errors" setting for this target.
+    if(NO_WARN_AS_ERROR)
         if(MSVC)
-            target_compile_options(${TARGET_NAME} PRIVATE /WX)
+            target_compile_options(${TARGET_NAME} PRIVATE /WX-)
         else()
-            target_compile_options(${TARGET_NAME} PRIVATE -Werror)
+            target_compile_options(${TARGET_NAME} PRIVATE -Wno-error)
         endif()
     endif()
-
-    # Standard C++ configuration could go here if not global
 endfunction()
 
 function(AddCommonLibraryDirectory)
@@ -88,7 +66,7 @@ function(AddCommonLibraryDirectory)
         target_include_directories(${ARG_LIB_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
         # Apply common configuration
-        common_library_configure_target(${ARG_LIB_NAME} "${ARG_NO_WARN_AS_ERROR}")
+        apply_common_lib_warning_overrides(${ARG_LIB_NAME} "${ARG_NO_WARN_AS_ERROR}")
     else()
         add_library(${ARG_LIB_NAME} INTERFACE)
         target_include_directories(${ARG_LIB_NAME} INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>" "$<INSTALL_INTERFACE:include>")
@@ -142,7 +120,7 @@ function(AddCommonLibraryDirectory)
         target_link_libraries(${MOCK_LIB_NAME} PUBLIC gmock gtest)
 
         # Apply common configuration
-        common_library_configure_target(${MOCK_LIB_NAME} "${ARG_NO_WARN_AS_ERROR}")
+        apply_common_lib_warning_overrides(${MOCK_LIB_NAME} "${ARG_NO_WARN_AS_ERROR}")
 
         install(TARGETS ${MOCK_LIB_NAME}
             EXPORT ${ARG_LIB_NAME}Targets
@@ -170,7 +148,7 @@ function(AddCommonLibraryDirectory)
         endif()
 
         # Apply common configuration (tests often want warnings too)
-        common_library_configure_target(${TEST_EXE_NAME} "${ARG_NO_WARN_AS_ERROR}")
+        apply_common_lib_warning_overrides(${TEST_EXE_NAME} "${ARG_NO_WARN_AS_ERROR}")
 
         # Test Discovery
         if(ARG_USE_CTEST_ONLY OR COMMON_LIB_GLOBAL_USE_CTEST_ONLY)
