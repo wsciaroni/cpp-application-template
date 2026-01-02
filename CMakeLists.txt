@@ -16,6 +16,9 @@ endif(MSVC)
 include(cmake/EnableGTest.cmake)
 enable_gtest()
 
+include(cmake/AddCommonLibraryDirectory.cmake)
+option(COMMON_LIB_GLOBAL_USE_CTEST_ONLY "Force all common libraries to use CTest only (skip gtest discovery)" OFF)
+
 # Include sub-projects.
 add_subdirectory ("${CMAKE_CURRENT_LIST_DIR}/libraries")
 add_subdirectory ("${CMAKE_CURRENT_LIST_DIR}/applications")
