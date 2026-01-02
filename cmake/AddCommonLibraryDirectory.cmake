@@ -1,3 +1,35 @@
+# AddCommonLibraryDirectory
+#
+# This function automates the creation of a C++ library, including its mocks, unit tests,
+# and installation rules, based on a standard directory structure.
+#
+# Directory Structure:
+#   include/  - Public headers (exposed to consumers)
+#   source/   - Private sources and headers (implementation details)
+#   mocks/    - Mock implementation (using GoogleMock)
+#   tests/    - Unit tests (using GoogleTest)
+#
+# Arguments:
+#   LIB_NAME                : The name of the library target to create.
+#   PUBLIC_DEPENDENCIES     : List of public dependencies (propagated to consumers).
+#   INTERFACE_DEPENDENCIES  : List of interface dependencies (propagated but not linked if header-only).
+#   PRIVATE_DEPENDENCIES    : List of private dependencies (implementation details only).
+#   MOCK_DEPENDENCIES       : List of dependencies specific to the mock library.
+#   NO_WARN_AS_ERROR        : Option to disable "warnings as errors" (default is ON).
+#   USE_CTEST_ONLY          : Option to force using simple `add_test` instead of `gtest_discover_tests`.
+#
+# Generated Targets:
+#   <LIB_NAME>              : The main library (STATIC or INTERFACE).
+#   <LIB_NAME>_mocks        : The mock library (STATIC), if `mocks/` exists.
+#   <LIB_NAME>_unittests    : The test executable, if `tests/` exists.
+#
+# Example Usage:
+#   AddCommonLibraryDirectory(
+#       LIB_NAME myLib
+#       PUBLIC_DEPENDENCIES otherLib
+#   )
+#
+
 # Helper function for common configuration
 function(common_library_configure_target TARGET_NAME NO_WARN_AS_ERROR)
     # Warnings
